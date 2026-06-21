@@ -1,1 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Saúde: IMC e Peso Ideal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .resultado {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            text-align: left;
+            font-size: 16px;
+            color: #333;
+            display: none;
+            line-height: 1.5;
+        }
+
+        .destaque {
+            font-size: 20px;
+            font-weight: bold;
+            color: #28a745;
+            display: block;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Calculadora de Saúde</h2>
+
+        <div class="form-group">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" placeholder="Digite seu nome">
+        </div>
+
+        <div class="form-group">
+            <label for="altura">Altura (metros):</label>
+            <input type="number" id="altura" step="0.01" placeholder="Ex: 1.75">
+        </div>
+
+        <div class="form-group">
+            <label for="peso">Peso Atual (kg):</label>
+            <input type="number" id="peso" step="0.1" placeholder="Ex: 70.5">
+        </div>
+
+        <button onclick="calcularSaude()">Calcular Diagnóstico</button>
+
+        <div id="resultado" class="resultado"></div>
+    </div>
+
+    <script>
+        function calcularSaude() {
+            const nome = document.getElementById('nome').value;
+            const altura = parseFloat(document.getElementById('altura').value);
+            const pesoAtual = parseFloat(document.getElementById('peso').value);
+            const divResultado = document.getElementById('resultado');
+
+            // Validação de segurança dos campos
+            if (!nome || !altura || altura <= 0 || !pesoAtual || pesoAtual <= 0) {
+                divResultado.style.display = 'block';
+                divResultado.style.color = '#dc3545';
+                divResultado.innerHTML = 'Por favor, preencha todos os campos corretamente.';
+                return;
+            }
+
+            // 1. Cálculo do IMC Atual
+            const imc = pesoAtual / (altura * altura);
+
+            // 2. Classificação do IMC baseado na tabela oficial da OMS
+            let classificacao = "";
+            if (imc < 18.5) {
+                classificacao = "Abaixo do peso";
+            } else if (imc >= 18.5 && imc < 25) {
+                classificacao = "Peso normal (Saudável)";
+            } else if (imc >= 25 && imc < 30) {
+                classificacao = "Sobrepeso";
+            } else {
+                classificacao = "Obesidade";
+            }
+
+            // 3. Cálculo da Faixa de Peso Ideal (Limites de 18.5 a 24.9)
+            const pesoMinimo = 18.5 * (altura * altura);
+            const pesoMaximo = 24.9 * (altura * altura);
+
+            // Monta e exibe a resposta estruturada na tela
+            divResultado.style.display = 'block';
+            divResultado.style.color = '#333';
+            divResultado.innerHTML = `
+            <strong>Olá, ${nome}! Aqui está o seu resultado:</strong><br><br>
+            
+            Seu IMC atual é: 
+            <span class="destaque" style="color: #007BFF;">${imc.toFixed(1)} kg/m²</span>
+            Situação: <strong>${classificacao}</strong><br><br>
+            
+            Sua faixa de peso saudável recomendada pela OMS é:
+            <span class="destaque">${pesoMinimo.toFixed(1)} kg até ${pesoMaximo.toFixed(1)} kg</span>
+        `;
+        }
+    </script>
+
+</body>
+
+</html>
